@@ -22,29 +22,24 @@ This is a nuspec. It mostly adheres to https://docs.nuget.org/create/Nuspec-Refe
     <!-- This section is about this package, although id and version have ties back to the software -->
     <!-- id is lowercase and if you want a good separator for words, use '-', not '.'. Dots are only acceptable as suffixes for certain types of packages, e.g. .install, .portable, .extension, .template -->
     <id>sunsama</id>
-    <!-- version should MATCH as closely as possible with the underlying software -->
     <version>3.0.5</version>
     <packageSourceUrl>https://github.com/sebastianhuus/sunsama-chocolatey</packageSourceUrl>
-    <!-- owners is a poor name for maintainers of the package. It sticks around by this name for compatibility reasons. It basically means you. -->
-    <!--<owners>sebastianhuus</owners>-->
+    <owners>sebastianhuus</owners>
     <!-- ============================== -->
 
     <!-- == SOFTWARE SPECIFIC SECTION == -->
-    <!-- This section is about the software itself -->
     <title>Sunsama</title>
     <authors>Summay Inc.</authors>
-    <!-- projectUrl is required for the community feed -->
     <projectUrl>https://www.sunsama.com/desktop</projectUrl>
     <!-- There are a number of CDN Services that can be used for hosting the Icon for a package. More information can be found here: https://docs.chocolatey.org/en-us/create/create-packages#package-icon-guidelines -->
     <!-- Here is an example using Githack -->
-    <!--<iconUrl>http://rawcdn.githack.com/__REPLACE_YOUR_REPO__/master/icons/sunsama.png</iconUrl>-->
+    <iconUrl>https://raw.githack.com/sebastianhuus/sunsama-chocolatey/main/sunsamaicon.jpeg</iconUrl>
     <copyright>2025</copyright>
     <!-- If there is a license Url available, it is required for the community feed -->
     <licenseUrl>https://www.sunsama.com/terms</licenseUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <!--<projectSourceUrl>Software Source Location - is the software FOSS somewhere? Link to it with this</projectSourceUrl>-->
     <!--<docsUrl>At what url are the software docs located?</docsUrl>-->
-    <!--<mailingListUrl></mailingListUrl>-->
     <!--<bugTrackerUrl></bugTrackerUrl>-->
     <tags>sunsama, to-do, lists, calendar, summay, daily-planner, planning-tool</tags>
     <summary>Make work-life balance a reality</summary>
