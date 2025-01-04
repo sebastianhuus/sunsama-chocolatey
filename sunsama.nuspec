@@ -34,7 +34,7 @@ This is a nuspec. It mostly adheres to https://docs.nuget.org/create/Nuspec-Refe
     <licenseUrl>https://www.sunsama.com/terms</licenseUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <docsUrl>https://help.sunsama.com/</docsUrl>
-    <tags>sunsama, to-do, lists, calendar, summay, daily-planner, planning-tool</tags>
+    <tags>sunsama to-do lists calendar summay daily-planner planning-tool</tags>
     <summary>Make work-life balance a reality</summary>
     <description>The digital daily planner that helps you feel calm and stay focused.</description>
     <!-- <releaseNotes>__REPLACE_OR_REMOVE__MarkDown_Okay</releaseNotes> -->
