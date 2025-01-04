@@ -24,7 +24,7 @@ This is a nuspec. It mostly adheres to https://docs.nuget.org/create/Nuspec-Refe
     <id>sunsama</id>
     <!-- version should MATCH as closely as possible with the underlying software -->
     <version>3.0.5</version>
-    <!--<packageSourceUrl>TODO PALCE GITHUB HERE</packageSourceUrl>-->
+    <packageSourceUrl>https://github.com/sebastianhuus/sunsama-chocolatey</packageSourceUrl>
     <!-- owners is a poor name for maintainers of the package. It sticks around by this name for compatibility reasons. It basically means you. -->
     <!--<owners>sebastianhuus</owners>-->
     <!-- ============================== -->
