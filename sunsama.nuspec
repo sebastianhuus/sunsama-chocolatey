@@ -24,7 +24,7 @@ This is a nuspec. It mostly adheres to https://docs.nuget.org/create/Nuspec-Refe
     <id>sunsama</id>
     <!-- version should MATCH as closely as possible with the underlying software -->
     <version>3.0.5</version>
-    <packageSourceUrl>TODO PALCE GITHUB HERE</packageSourceUrl>
+    <!--<packageSourceUrl>TODO PALCE GITHUB HERE</packageSourceUrl>-->
     <!-- owners is a poor name for maintainers of the package. It sticks around by this name for compatibility reasons. It basically means you. -->
     <!--<owners>sebastianhuus</owners>-->
     <!-- ============================== -->
@@ -37,7 +37,7 @@ This is a nuspec. It mostly adheres to https://docs.nuget.org/create/Nuspec-Refe
     <projectUrl>https://www.sunsama.com/desktop</projectUrl>
     <!-- There are a number of CDN Services that can be used for hosting the Icon for a package. More information can be found here: https://docs.chocolatey.org/en-us/create/create-packages#package-icon-guidelines -->
     <!-- Here is an example using Githack -->
-    <iconUrl>http://rawcdn.githack.com/__REPLACE_YOUR_REPO__/master/icons/sunsama.png</iconUrl>
+    <!--<iconUrl>http://rawcdn.githack.com/__REPLACE_YOUR_REPO__/master/icons/sunsama.png</iconUrl>-->
     <copyright>2025</copyright>
     <!-- If there is a license Url available, it is required for the community feed -->
     <licenseUrl>https://www.sunsama.com/terms</licenseUrl>
