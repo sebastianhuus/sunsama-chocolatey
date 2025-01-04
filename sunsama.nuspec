@@ -30,7 +30,7 @@ This is a nuspec. It mostly adheres to https://docs.nuget.org/create/Nuspec-Refe
     <authors>Summay Inc.</authors>
     <projectUrl>https://www.sunsama.com/desktop</projectUrl>
     <iconUrl>https://raw.githack.com/sebastianhuus/sunsama-chocolatey/main/sunsamaicon.png</iconUrl>
-    <copyright>2025</copyright>
+    <copyright>© 2024 Summay, Inc.2025</copyright>
     <licenseUrl>https://www.sunsama.com/terms</licenseUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <docsUrl>https://help.sunsama.com/</docsUrl>
