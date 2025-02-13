@@ -9,7 +9,7 @@ Test it locally using:
 `choco upgrade --source=. sunsama` 
 
 Push update to community repo using:
-`choco push sunsama.nupkg --source https://push.chocolatey.org/ --api-key YOUR-API-KEY`
+`choco push sunsama.<VERSION>.nupkg --source https://push.chocolatey.org/ --api-key YOUR-API-KEY` (remember version)
 
 ## What to do when it breaks
 1. Go to https://www.sunsama.com/desktop and download the desktop installer
