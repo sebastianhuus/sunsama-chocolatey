@@ -36,25 +36,46 @@ echo "🔐 Calculating SHA256 hash..."
 NEW_HASH=$(shasum -a 256 "sunsama-installer.exe" | cut -d' ' -f1)
 echo "New hash: $NEW_HASH"
 
-# Get current hash from install script (match only the checksum line, not checksumType)
-CURRENT_HASH=$(grep "^[[:space:]]*checksum[[:space:]]*=" "$INSTALL_SCRIPT" | head -1 | grep -o "'[^']*'" | tr -d "'")
-echo "Current hash: $CURRENT_HASH"
+# Extract version number
+echo "🔢 Extracting version number..."
+cd "$SCRIPT_DIR"
+NEW_VERSION=$(uv run extract-version.py "$TEMP_DIR/sunsama-installer.exe" | grep "Version found:" | cut -d' ' -f3)
+cd "$TEMP_DIR"
 
-# Compare hashes
-if [ "$NEW_HASH" = "$CURRENT_HASH" ]; then
-    echo "✅ No update needed - hashes match"
+if [ -z "$NEW_VERSION" ]; then
+    echo "❌ Could not extract version number"
+    exit 1
+fi
+
+# Clean up version (remove .0 if it's 3.1.2.0 -> 3.1.2)
+NEW_VERSION_CLEAN=$(echo "$NEW_VERSION" | sed 's/\.0$//')
+echo "New version: $NEW_VERSION_CLEAN"
+
+# Get current hash and version
+CURRENT_HASH=$(grep "^[[:space:]]*checksum[[:space:]]*=" "$INSTALL_SCRIPT" | head -1 | grep -o "'[^']*'" | tr -d "'")
+CURRENT_VERSION=$(grep "<version>" "$NUSPEC_FILE" | sed 's/.*<version>\(.*\)<\/version>.*/\1/')
+
+echo "Current hash: $CURRENT_HASH"
+echo "Current version: $CURRENT_VERSION"
+
+# Compare versions and hashes
+if [ "$NEW_VERSION_CLEAN" = "$CURRENT_VERSION" ] && [ "$NEW_HASH" = "$CURRENT_HASH" ]; then
+    echo "✅ No update needed - version and hash match"
     rm -rf "$TEMP_DIR"
     exit 0
 fi
 
-echo "🆕 New version detected!"
+echo "🆕 Update detected!"
 echo "📝 Updating package files..."
 
 # Update hash in install script (only the first checksum line, not checksumType)
 sed -i.bak "s/^[[:space:]]*checksum[[:space:]]*=.*'/  checksum = '$NEW_HASH'/" "$INSTALL_SCRIPT"
 
-# TODO: Update version in nuspec file (need to determine version number)
-echo "⚠️  Don't forget to update version in $NUSPEC_FILE"
+# Update version in nuspec file
+sed -i.bak "s/<version>.*<\/version>/<version>$NEW_VERSION_CLEAN<\/version>/" "$NUSPEC_FILE"
+
+echo "✅ Updated hash: $CURRENT_HASH → $NEW_HASH"
+echo "✅ Updated version: $CURRENT_VERSION → $NEW_VERSION_CLEAN"
 
 echo "✅ Hash updated successfully"
 echo "🧹 Cleaning up..."
