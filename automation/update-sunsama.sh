@@ -36,8 +36,8 @@ echo "🔐 Calculating SHA256 hash..."
 NEW_HASH=$(shasum -a 256 "sunsama-installer.exe" | cut -d' ' -f1)
 echo "New hash: $NEW_HASH"
 
-# Get current hash from install script
-CURRENT_HASH=$(grep -o "checksum.*=.*'[^']*'" "$INSTALL_SCRIPT" | grep -o "'[^']*'" | tr -d "'")
+# Get current hash from install script (match only the checksum line, not checksumType)
+CURRENT_HASH=$(grep "^[[:space:]]*checksum[[:space:]]*=" "$INSTALL_SCRIPT" | head -1 | grep -o "'[^']*'" | tr -d "'")
 echo "Current hash: $CURRENT_HASH"
 
 # Compare hashes
@@ -50,8 +50,8 @@ fi
 echo "🆕 New version detected!"
 echo "📝 Updating package files..."
 
-# Update hash in install script
-sed -i.bak "s/checksum.*=.*'[^']*'/checksum = '$NEW_HASH'/" "$INSTALL_SCRIPT"
+# Update hash in install script (only the first checksum line, not checksumType)
+sed -i.bak "s/^[[:space:]]*checksum[[:space:]]*=.*'/  checksum = '$NEW_HASH'/" "$INSTALL_SCRIPT"
 
 # TODO: Update version in nuspec file (need to determine version number)
 echo "⚠️  Don't forget to update version in $NUSPEC_FILE"
