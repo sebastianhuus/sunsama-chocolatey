@@ -130,6 +130,6 @@ if __name__ == "__main__":
     version = extract_nsis_and_find_version(installer_path)
     
     if version:
-        print(f"\n🎉 Version found: {version}")
+        print(f"\nVERSION_FOUND: {version}")
     else:
-        print("\n❌ No version found")
+        print("\nERROR: No version found")

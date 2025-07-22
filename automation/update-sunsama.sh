@@ -39,7 +39,8 @@ echo "New hash: $NEW_HASH"
 # Extract version number
 echo "🔢 Extracting version number..."
 cd "$SCRIPT_DIR"
-NEW_VERSION=$(uv run extract-version.py "$TEMP_DIR/sunsama-installer.exe" | grep "Version found:" | cut -d' ' -f3)
+VERSION_OUTPUT=$(uv run extract-version.py "$TEMP_DIR/sunsama-installer.exe")
+NEW_VERSION=$(echo "$VERSION_OUTPUT" | grep "VERSION_FOUND:" | cut -d' ' -f2)
 cd "$TEMP_DIR"
 
 if [ -z "$NEW_VERSION" ]; then
