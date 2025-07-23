@@ -20,7 +20,7 @@ This is a nuspec. It mostly adheres to https://docs.nuget.org/create/Nuspec-Refe
   <metadata>
     <!-- == PACKAGE SPECIFIC SECTION == -->
     <id>sunsama</id>
-    <version>3.1.2</version>
+    <version>3.0.7</version>
     <packageSourceUrl>https://github.com/sebastianhuus/sunsama-chocolatey</packageSourceUrl>
     <owners>sebastianhuus</owners>
     <!-- ============================== -->
