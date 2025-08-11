@@ -2,8 +2,26 @@
 
 # Sunsama Chocolatey Package Updater
 # Downloads the latest Sunsama installer and updates package if hash changes
+#
+# Usage: ./update-sunsama.sh [--debug]
+#   --debug  Show detailed output from version extraction
 
 set -e  # Exit on error
+
+# Parse arguments
+DEBUG=false
+for arg in "$@"; do
+    case $arg in
+        --debug)
+            DEBUG=true
+            shift
+            ;;
+        *)
+            echo "Usage: $0 [--debug]"
+            exit 1
+            ;;
+    esac
+done
 
 # Get script directory and set package path
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -39,8 +57,15 @@ echo "New hash: $NEW_HASH"
 # Extract version number
 echo "🔢 Extracting version number..."
 cd "$SCRIPT_DIR"
-VERSION_OUTPUT=$(uv run extract-version.py "$TEMP_DIR/sunsama-installer.exe")
-NEW_VERSION=$(echo "$VERSION_OUTPUT" | grep "VERSION_FOUND:" | cut -d' ' -f2)
+if [ "$DEBUG" = true ]; then
+    echo "Debug: Running version extraction with full output..."
+    VERSION_OUTPUT=$(uv run extract-version.py "$TEMP_DIR/sunsama-installer.exe")
+    echo "$VERSION_OUTPUT"
+    NEW_VERSION=$(echo "$VERSION_OUTPUT" | grep "VERSION_FOUND:" | cut -d' ' -f2)
+else
+    VERSION_OUTPUT=$(uv run extract-version.py "$TEMP_DIR/sunsama-installer.exe")
+    NEW_VERSION=$(echo "$VERSION_OUTPUT" | grep "VERSION_FOUND:" | cut -d' ' -f2)
+fi
 cd "$TEMP_DIR"
 
 if [ -z "$NEW_VERSION" ]; then
