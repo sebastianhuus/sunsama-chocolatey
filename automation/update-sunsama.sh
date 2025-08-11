@@ -42,7 +42,7 @@ cd "$TEMP_DIR"
 
 # Download with Windows User-Agent to get the installer
 echo "📥 Downloading installer..."
-curl -L -A "$USER_AGENT" -o "sunsama-installer.exe" "$DOWNLOAD_URL"
+curl -# -L -A "$USER_AGENT" -o "sunsama-installer.exe" "$DOWNLOAD_URL"
 
 if [ ! -f "sunsama-installer.exe" ]; then
     echo "❌ Failed to download installer"
