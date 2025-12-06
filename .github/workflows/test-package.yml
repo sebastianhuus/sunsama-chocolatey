@@ -11,6 +11,8 @@ on:
 jobs:
   test:
     runs-on: windows-latest
+    outputs:
+      failed: ${{ steps.test.outcome == 'failure' }}
     steps:
       - uses: actions/checkout@v4
       
@@ -19,10 +21,13 @@ jobs:
         working-directory: package
       
       - name: Install package
+        id: test
+        continue-on-error: true
         run: choco install --source=. sunsama -y
         working-directory: package
       
       - name: Verify installation
+        if: steps.test.outcome == 'success'
         run: |
           if (Test-Path "$env:LOCALAPPDATA\Programs\Sunsama\Sunsama.exe") {
             Write-Host "✓ Sunsama installed successfully"
@@ -30,3 +35,16 @@ jobs:
             Write-Error "✗ Sunsama.exe not found"
             exit 1
           }
+      
+      - name: Trigger auto-fix workflow
+        if: steps.test.outcome == 'failure' && github.event_name == 'schedule'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'auto-fix.yml',
+              ref: 'main'
+            });

@@ -1,0 +1,59 @@
+name: Auto-fix Package
+
+on:
+  workflow_dispatch:
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+      
+      - name: Install dependencies
+        run: |
+          export PATH="$HOME/.cargo/bin:$PATH"
+          uv sync
+        working-directory: automation
+      
+      - name: Install tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y p7zip-full libimage-exiftool-perl
+      
+      - name: Run update script
+        id: update
+        run: |
+          export PATH="$HOME/.cargo/bin:$PATH"
+          ./update-sunsama.sh
+          if [ -f package/sunsama.nuspec.bak ]; then
+            echo "updated=true" >> $GITHUB_OUTPUT
+            VERSION=$(grep -oP '(?<=<version>)[^<]+' package/sunsama.nuspec)
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+          else
+            echo "updated=false" >> $GITHUB_OUTPUT
+          fi
+        working-directory: automation
+      
+      - name: Create Pull Request
+        if: steps.update.outputs.updated == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "Update Sunsama to v${{ steps.update.outputs.version }}"
+          branch: auto-update-${{ steps.update.outputs.version }}
+          title: "Update Sunsama to v${{ steps.update.outputs.version }}"
+          body: |
+            Automated package update detected.
+            
+            - Version: ${{ steps.update.outputs.version }}
+            - Updated checksum in chocolateyinstall.ps1
+            - Updated version in sunsama.nuspec
+            
+            Please review and merge if tests pass.
