@@ -7,15 +7,30 @@ import tempfile
 import re
 from pathlib import Path
 
+def get_7z_command():
+    """Find available 7z command (7zz or 7z)"""
+    for cmd in ['7zz', '7z']:
+        try:
+            subprocess.run([cmd, '--help'], capture_output=True, check=True)
+            return cmd
+        except (subprocess.CalledProcessError, FileNotFoundError):
+            continue
+    return None
+
 def extract_nsis_and_find_version(installer_path):
     """Extract version info from NSIS installer"""
     
-    # First try to get version info from 7zz listing (faster)
-    print(f"🔍 Checking installer metadata with 7zz...")
+    seven_zip = get_7z_command()
+    if not seven_zip:
+        print("❌ 7z/7zz not found. Install with: brew install sevenzip (macOS) or apt-get install p7zip-full (Linux)")
+        return None
+    
+    # First try to get version info from 7z listing (faster)
+    print(f"🔍 Checking installer metadata with {seven_zip}...")
     try:
         result = subprocess.run([
-            '7zz', 'l', installer_path
-        ], capture_output=True, text=True)  # Don't use check=True since 7zz may return warnings
+            seven_zip, 'l', installer_path
+        ], capture_output=True, text=True)  # Don't use check=True since 7z may return warnings
         
         # Look for ProductVersion in both stdout and stderr (7zz might put info in stderr)
         output = result.stdout + result.stderr
@@ -26,25 +41,26 @@ def extract_nsis_and_find_version(installer_path):
             return version
                     
     except FileNotFoundError:
-        print("❌ 7zz not found. Install with: brew install sevenzip")
+        print(f"❌ {seven_zip} not found")
+        return None
     
     # If that doesn't work, try full extraction
     with tempfile.TemporaryDirectory() as temp_dir:
         extract_dir = Path(temp_dir) / "extracted"
         
-        print(f"🗜️  Extracting NSIS installer with 7zz...")
+        print(f"🗜️  Extracting NSIS installer with {seven_zip}...")
         
-        # Try to extract with 7zz
+        # Try to extract with 7z
         try:
             result = subprocess.run([
-                '7zz', 'x', installer_path, f'-o{extract_dir}', '-y'
+                seven_zip, 'x', installer_path, f'-o{extract_dir}', '-y'
             ], capture_output=True, text=True, check=True)
             print(f"✅ Extraction successful")
         except subprocess.CalledProcessError as e:
-            print(f"❌ 7zz extraction failed: {e}")
+            print(f"❌ {seven_zip} extraction failed: {e}")
             return None
         except FileNotFoundError:
-            print("❌ 7zz not found. Install with: brew install sevenzip")
+            print(f"❌ {seven_zip} not found")
             return None
         
         # Look for version info in extracted files
