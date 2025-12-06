@@ -11,8 +11,6 @@ on:
 jobs:
   test:
     runs-on: windows-latest
-    outputs:
-      failed: ${{ steps.test.outcome == 'failure' }}
     steps:
       - uses: actions/checkout@v4
       
@@ -27,7 +25,9 @@ jobs:
         working-directory: package
       
       - name: Verify installation
+        id: verify
         if: steps.test.outcome == 'success'
+        continue-on-error: true
         run: |
           if (Test-Path "$env:LOCALAPPDATA\Programs\Sunsama\Sunsama.exe") {
             Write-Host "✓ Sunsama installed successfully"
@@ -37,7 +37,7 @@ jobs:
           }
       
       - name: Trigger auto-fix workflow
-        if: steps.test.outcome == 'failure' && github.event_name == 'schedule'
+        if: (steps.test.outcome == 'failure' || steps.verify.outcome == 'failure') && github.event_name != 'pull_request'
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -48,3 +48,7 @@ jobs:
               workflow_id: 'auto-fix.yml',
               ref: 'main'
             });
+      
+      - name: Fail job if tests failed
+        if: steps.test.outcome == 'failure' || steps.verify.outcome == 'failure'
+        run: exit 1
