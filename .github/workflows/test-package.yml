@@ -1,0 +1,32 @@
+name: Test Package
+
+on:
+  schedule:
+    - cron: '0 0 * * 0'  # Weekly on Sunday at midnight UTC
+  workflow_dispatch:  # Manual trigger
+  pull_request:
+    paths:
+      - 'package/**'
+
+jobs:
+  test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Pack package
+        run: choco pack
+        working-directory: package
+      
+      - name: Install package
+        run: choco install --source=. sunsama -y
+        working-directory: package
+      
+      - name: Verify installation
+        run: |
+          if (Test-Path "$env:LOCALAPPDATA\Programs\Sunsama\Sunsama.exe") {
+            Write-Host "✓ Sunsama installed successfully"
+          } else {
+            Write-Error "✗ Sunsama.exe not found"
+            exit 1
+          }
