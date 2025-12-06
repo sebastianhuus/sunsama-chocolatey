@@ -35,15 +35,16 @@ jobs:
         id: update
         run: |
           export PATH="$HOME/.cargo/bin:$PATH"
+          cd automation
           ./update-sunsama.sh
-          if [ -f package/sunsama.nuspec.bak ]; then
+          cd ..
+          if git diff --quiet package/; then
+            echo "updated=false" >> $GITHUB_OUTPUT
+          else
             echo "updated=true" >> $GITHUB_OUTPUT
             VERSION=$(grep -oP '(?<=<version>)[^<]+' package/sunsama.nuspec)
             echo "version=$VERSION" >> $GITHUB_OUTPUT
-          else
-            echo "updated=false" >> $GITHUB_OUTPUT
           fi
-        working-directory: automation
       
       - name: Create Pull Request
         if: steps.update.outputs.updated == 'true'
