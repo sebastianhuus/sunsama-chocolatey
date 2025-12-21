@@ -2,6 +2,12 @@
 $toolsDir   = "$(Split-Path -parent $MyInvocation.MyCommand.Definition)"
 $url        = 'https://desktop.sunsama.com/'
 
+# Skip installation in CI environments where GUI is not available
+if ($env:CI -or $env:GITHUB_ACTIONS -or $env:TF_BUILD) {
+  Write-Host "Skipping installation in CI environment - Sunsama requires interactive installation"
+  return
+}
+
 $packageArgs = @{
   packageName   = $env:ChocolateyPackageName
   fileType      = 'EXE'
